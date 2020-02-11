@@ -29,5 +29,6 @@ public class Player : MonoBehaviour
     public void Attack(int damage)
     {
         _currentHealth = Mathf.Clamp(_currentHealth - damage, 0, Health);
+        Debug.Log(_currentHealth);
     }
 }
