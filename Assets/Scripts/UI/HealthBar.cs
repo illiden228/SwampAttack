@@ -15,8 +15,13 @@ public class HealthBar : MonoBehaviour
         _slider.value = 1;
     }
 
-    private void ChangeHealth(float health)
+    private void ChangeHealth(float currentHealth, float maxHealth)
     {
-        _slider.value = health / Player.Health;
+        _slider.value = currentHealth / maxHealth;
+    }
+
+    private void OnDestroy()
+    {
+        Player.ChangeHealth -= ChangeHealth;
     }
 }

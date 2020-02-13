@@ -15,14 +15,12 @@ public class Enemy : MonoBehaviour
     private float _lastAttackTime;
     private Animator _animator;
 
-    // Start is called before the first frame update
     void Start()
     {
         AttackRange = Random.Range(AttackRange - 0.5f, AttackRange + 0.5f);
         _animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(_target == null)
