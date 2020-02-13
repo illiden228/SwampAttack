@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AttackRange = Random.Range(AttackRange - 0.5f, AttackRange + 0.5f);
         _animator = GetComponent<Animator>();
     }
 

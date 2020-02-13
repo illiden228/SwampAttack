@@ -147,4 +147,4 @@ MonoBehaviour:
   AttackDamage: 5
   AttackDelay: 1
   AttackRange: 1
-  ParticleDamage: 5
+  ParticleDamage: 3

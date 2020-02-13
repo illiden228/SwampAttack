@@ -37,7 +37,7 @@ public class Spawner : MonoBehaviour
         
         if(_currentWave.EnemyCount <= _spawned)
         {
-            if(Waves.Count > _waveCount)
+            if(Waves.Count > _waveCount + 1)
             {
                 SetWave(++_waveCount);
                 _spawned = 0;
@@ -47,8 +47,6 @@ public class Spawner : MonoBehaviour
                 _currentWave = null;
             }
         }
-        Debug.Log("CurrentWave: " + _currentWave + ", WaveCount: " + _waveCount + ", Spawned: " + _spawned + ", EnemyCount: " + _currentWave.EnemyCount);
-        Debug.Log("-----------------------");
     }
 
     public void SetWave(int index)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class Player : MonoBehaviour
 {
     public float Health;
     public ParticleSystem Shootgun;
+    public Action<float> ChangeHealth; 
 
     private float _currentHealth;
     private Animator _animator;
@@ -29,5 +31,10 @@ public class Player : MonoBehaviour
     public void Attack(int damage)
     {
         _currentHealth = Mathf.Clamp(_currentHealth - damage, 0, Health);
+        ChangeHealth?.Invoke(_currentHealth);
+        if(_currentHealth == 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
