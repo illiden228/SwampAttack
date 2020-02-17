@@ -5,6 +5,7 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     public GameObject Panel;
+    public GameObject ShopPanel;
 
     public void OpenPanel()
     {
@@ -15,6 +16,18 @@ public class Menu : MonoBehaviour
     public void ClosePanel()
     {
         Panel.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void OpenShopPanel()
+    {
+        ShopPanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    public void CloseChopPanel()
+    {
+        ShopPanel.SetActive(false);
         Time.timeScale = 1f;
     }
 
