@@ -30,8 +30,9 @@ public class Spawner : MonoBehaviour
         _lastSpawnTime += Time.deltaTime;
         if(_lastSpawnTime >= _currentWave.EnemyBetweenDelay)
         {
-            var enemy = Instantiate(_currentWave.EnemyPrefab, transform.position, transform.rotation, transform);
-            enemy.GetComponent<Enemy>().SetTarget(Player);
+            var enemy = Instantiate(_currentWave.EnemyPrefab, transform.position, transform.rotation, transform).GetComponent<Enemy>();
+            enemy.SetTarget(Player);
+            enemy.OnEnemyDie += Player.GetReward;
             _spawned++;
             ChangeEnemyCount?.Invoke(_spawned, _currentWave.EnemyCount);
             _lastSpawnTime = 0;

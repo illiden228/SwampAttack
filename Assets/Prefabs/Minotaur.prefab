@@ -148,3 +148,4 @@ MonoBehaviour:
   AttackDelay: 1
   AttackRange: 1
   ParticleDamage: 3
+  Reward: 50

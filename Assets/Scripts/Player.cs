@@ -7,7 +7,9 @@ public class Player : MonoBehaviour
 {
     public float Health;
     public ParticleSystem Shootgun;
-    public Action<float, float> ChangeHealth; 
+    public Action<float, float> ChangeHealth;
+    public int Money;
+    public List<Weapon> Weapons;
 
     private float _currentHealth;
     private Animator _animator;
@@ -35,5 +37,15 @@ public class Player : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void GetReward(int reward)
+    {
+        Money += reward;
+    }
+
+    public void GetWeapon(Weapon weapon)
+    {
+        Weapons.Add(weapon);
     }
 }

@@ -18,14 +18,14 @@ public class Item : MonoBehaviour
     private void Start()
     {
         Button.onClick.AddListener(() => OnButtonClick?.Invoke(Weapon));
-        Button.onClick.AddListener(() => CheckBuy());
+        Button.onClick.AddListener(() => CheckWeaponAtate());
 
         Name.text = Weapon.Name;
         Price.text = Weapon.Price.ToString();
         Icon.sprite = Weapon.Icon;
     }
 
-    private void CheckBuy()
+    private void CheckWeaponAtate()
     {
         if(Weapon.IsBuy)
         {
