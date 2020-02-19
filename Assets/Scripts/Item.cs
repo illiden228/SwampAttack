@@ -18,7 +18,7 @@ public class Item : MonoBehaviour
     private void Start()
     {
         Button.onClick.AddListener(() => OnButtonClick?.Invoke(Weapon));
-        Button.onClick.AddListener(() => CheckWeaponAtate());
+        Button.onClick.AddListener(() => CheckWeaponAtate()); 
 
         Name.text = Weapon.Name;
         Price.text = Weapon.Price.ToString();

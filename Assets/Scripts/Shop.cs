@@ -26,6 +26,7 @@ public class Shop : MonoBehaviour
             weapon.IsBuy = true;
             _player.GetWeapon(weapon);
             _player.Money -= weapon.Price;
+            _player.MoneyText.text = "Денег: " + _player.Money.ToString();
         }
     }
 }
