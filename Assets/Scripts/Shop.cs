@@ -4,29 +4,38 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    public List<Weapon> Weapons;
-    public Items Items;
-
+    [SerializeField] private List<Weapon> _weapons;
     [SerializeField] private Player _player;
+    [SerializeField] private WeaponView _template;
+    [SerializeField] private GameObject _itemContainer;
 
     private void Start()
     {
-        for(int i = 0; i < Weapons.Count; i++)
+        for (int i = 0; i < _weapons.Count; i++)
         {
-            Items.AddItem(Weapons[i]);
+            AddItem(_weapons[i]);
         }
-
-        Items.OnWeaponBuy += BuyWeapon;
     }
 
-    public void BuyWeapon(Weapon weapon)
+    private void AddItem(Weapon weapon)
     {
-        if (_player.Money >= weapon.Price)
+        var view = Instantiate(_template, _itemContainer.transform);
+        view.SellButtonClick += OnSellButtonClick;
+        view.Render(weapon);
+    }
+
+    private void OnSellButtonClick(Weapon weapon, WeaponView view)
+    {
+        TrySellWeapon(weapon, view);
+    }
+
+    private void TrySellWeapon(Weapon weapon, WeaponView view)
+    {
+        if(weapon.Price <= _player.Money)
         {
-            weapon.IsBuy = true;
-            _player.GetWeapon(weapon);
-            _player.Money -= weapon.Price;
-            _player.MoneyText.text = "Денег: " + _player.Money.ToString();
+            _player.BuyWeapon(weapon);
+            weapon.Buy();
+            view.SellButtonClick -= OnSellButtonClick;
         }
     }
 }

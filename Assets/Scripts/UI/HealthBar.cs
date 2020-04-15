@@ -1,27 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
+public class HealthBar : Bar
 {
-    public Player Player;
+    [SerializeField] Player _player;
 
-    private Slider _slider;
-    void Start()
+    private void OnEnable()
     {
-        Player.ChangeHealth += ChangeHealth;
-        _slider = GetComponentInChildren<Slider>();
-        _slider.value = 1;
+        _player.HealthChanged += OnValueChanged;
+        Slider.value = 1;
     }
-
-    private void ChangeHealth(float currentHealth, float maxHealth)
+    
+    private void OnDisable()
     {
-        _slider.value = currentHealth / maxHealth;
-    }
-
-    private void OnDestroy()
-    {
-        Player.ChangeHealth -= ChangeHealth;
+        _player.HealthChanged -= OnValueChanged;
     }
 }

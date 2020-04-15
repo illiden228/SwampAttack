@@ -1,28 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class ProgressBar : MonoBehaviour
+public class ProgressBar : Bar
 {
-    public Spawner Spawner;
+    [SerializeField] Spawner _spawner;
 
-    private Slider _slider;
-
-    void Start()
+    private void OnEnable()
     {
-        Spawner.ChangeEnemyCount += ChangeEnemyCount;
-        _slider = GetComponentInChildren<Slider>();
-        _slider.value = 0;
+        _spawner.EnemyCountChanged += OnValueChanged;
+        Slider.value = 1;
     }
 
-    private void ChangeEnemyCount(int spawned, int enemyCount)
+    private void OnDisable()
     {
-        _slider.value = (float)spawned / enemyCount;
-    }
-
-    private void OnDestroy()
-    {
-        Spawner.ChangeEnemyCount -= ChangeEnemyCount;       
+        _spawner.EnemyCountChanged -= OnValueChanged;
     }
 }

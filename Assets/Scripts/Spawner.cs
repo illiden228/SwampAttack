@@ -1,75 +1,85 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Spawner : MonoBehaviour
 {
-    public List<Wave> Waves;
-    public Player Player;
-    public Action<int, int> ChangeEnemyCount;
-    public GameObject NextWaveButton;
+    [SerializeField] private List<Wave> _waves;
+    [SerializeField] private Transform _spawnPoint;
+    [SerializeField] private Player _player;
 
     private Wave _currentWave;
-    private int _waveCount;
-    private float _lastSpawnTime;
+    private int _currentWaveNumber = 0;
+    private float _timeLastAfterSpawn;
     private int _spawned;
+    
+    public event UnityAction AllEnemySpawned;
+    public event UnityAction<int, int> EnemyCountChanged;
 
-    void Start()
+    private void Start()
     {
-        SetWave(_waveCount);
+        SetWave(_currentWaveNumber);
     }
 
-    void Update()
+    private void Update()
     {
         if (_currentWave == null)
         {
             return;
         }
-
-        _lastSpawnTime += Time.deltaTime;
-        if(_lastSpawnTime >= _currentWave.EnemyBetweenDelay)
-        {
-            var enemy = Instantiate(_currentWave.EnemyPrefab, transform.position, transform.rotation, transform).GetComponent<Enemy>();
-            enemy.SetTarget(Player);
-            enemy.OnEnemyDie += Player.GetReward;
-            _spawned++;
-            ChangeEnemyCount?.Invoke(_spawned, _currentWave.EnemyCount);
-            _lastSpawnTime = 0;
-        }
         
-        if(_currentWave.EnemyCount <= _spawned)
+        _timeLastAfterSpawn += Time.deltaTime;
+
+        if (_timeLastAfterSpawn >= _currentWave.Delay)
         {
-            if(Waves.Count > _waveCount + 1)
-            {
-                NextWaveButton.SetActive(true);
-                _currentWave = null;
-            }
-            else
-            {
-                _currentWave = null;
-            }
+            InstantiateEnemy();
+            _spawned++;
+            _timeLastAfterSpawn = 0;
+            EnemyCountChanged?.Invoke(_spawned, _currentWave.Count);
         }
+
+        if (_currentWave.Count <= _spawned)
+        {
+            if (_waves.Count > _currentWaveNumber + 1)
+            {
+                AllEnemySpawned?.Invoke();
+            }
+
+            _currentWave = null;
+        }
+    }
+
+    private void InstantiateEnemy()
+    {
+        Enemy enemy = Instantiate(_currentWave.Template, _spawnPoint.position, _spawnPoint.rotation, _spawnPoint).GetComponent<Enemy>();
+        enemy.Init(_player);
+        enemy.Dying += OnEnemyDying;
+    }
+
+    private void SetWave(int index)
+    {
+        _currentWave = _waves[index];
+        EnemyCountChanged?.Invoke(0, 1);
     }
 
     public void NextWave()
     {
-        SetWave(++_waveCount);
+        SetWave(++_currentWaveNumber);
         _spawned = 0;
-        ChangeEnemyCount?.Invoke(0, 1);
-        NextWaveButton.SetActive(false);
     }
 
-    public void SetWave(int index)
+    private void OnEnemyDying(Enemy enemy)
     {
-        _currentWave = Waves[index];
+        enemy.Dying -= OnEnemyDying;
+
+        _player.AddMoney(enemy.Reward);
     }
 }
 
 [System.Serializable]
 public class Wave
 {
-    public GameObject EnemyPrefab;
-    public float EnemyBetweenDelay;
-    public int EnemyCount;
+    public GameObject Template;
+    public float Delay;
+    public int Count;
 }

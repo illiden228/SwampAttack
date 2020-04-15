@@ -1,31 +1,29 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
+[RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
 {
-    public float Health;
-    public ParticleSystem Shootgun;
-    public Action<float, float> ChangeHealth;
-    public int Money;
-    public TMP_Text MoneyText;
-    public Image CurrentWeaponIcon;
-    public TMP_Text CurrentWeaponName;
-    public List<Weapon> Weapons;
+    [SerializeField] private int _health;
+    [SerializeField] private List<Weapon> _weapons;
+    [SerializeField] private Transform _shootPoint;
 
+    private int _currentHealth;
     private Weapon _currentWeapon;
-    private int _currentWeaponNumber = 0;
-    private float _currentHealth;
+    private int _currentWeaponNumber;
     private Animator _animator;
+
+    public int Money { get; private set; }
+
+    public event UnityAction<int, int> HealthChanged;
+    public event UnityAction<int> MoneyChanged;
+    public event UnityAction<Weapon> WeaponChanged;
 
     void Start()
     {
-        MoneyText.text += Money.ToString();
-        ChangeWeapon(Weapons[_currentWeaponNumber]);   
-        _currentHealth = Health;
+        ChangeWeapon(_weapons[_currentWeaponNumber]);
+        _currentHealth = _health;
         _animator = GetComponent<Animator>();
     }
 
@@ -33,42 +31,37 @@ public class Player : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            Shootgun.Play();
-            _animator.Play("Shoot");
+            _currentWeapon.Shoot(_shootPoint);
         }
     }
 
-    public void Attack(int damage)
+    public void ApplyDamage(int damage)
     {
-        _currentHealth = Mathf.Clamp(_currentHealth - damage, 0, Health);
-        ChangeHealth?.Invoke(_currentHealth, Health);
-        if(_currentHealth == 0)
+        _currentHealth -= damage;
+        HealthChanged?.Invoke(_currentHealth, _health);
+
+        if(_currentHealth <= 0)
         {
             Destroy(gameObject);
         }
     }
 
-    public void GetReward(int reward)
+    public void AddMoney(int money)
     {
-        Money += reward;
-        MoneyText.text = "Денег: " + Money.ToString();
+        Money += money;
+        MoneyChanged?.Invoke(Money);
     }
 
-    public void GetWeapon(Weapon weapon)
+    public void BuyWeapon(Weapon weapon)
     {
-        Weapons.Add(weapon);
-    }
-
-    public void ChangeWeapon(Weapon weapon)
-    {
-        _currentWeapon = weapon;
-        Shootgun = weapon.ShootEffect;
-        SetWeaponUI(weapon);
+        Money -= weapon.Price;
+        MoneyChanged?.Invoke(Money);
+        _weapons.Add(weapon);
     }
 
     public void NextWeapon()
     {
-        if (_currentWeaponNumber == Weapons.Count - 1)
+        if(_currentWeaponNumber == _weapons.Count - 1)
         {
             _currentWeaponNumber = 0;
         }
@@ -76,25 +69,27 @@ public class Player : MonoBehaviour
         {
             _currentWeaponNumber++;
         }
-        ChangeWeapon(Weapons[_currentWeaponNumber]);
+
+        ChangeWeapon(_weapons[_currentWeaponNumber]);
     }
 
     public void PreviousWeapon()
     {
         if (_currentWeaponNumber == 0)
         {
-            _currentWeaponNumber = Weapons.Count - 1;
+            _currentWeaponNumber = _weapons.Count - 1;
         }
         else
         {
             _currentWeaponNumber--;
         }
-        ChangeWeapon(Weapons[_currentWeaponNumber]);
+
+        ChangeWeapon(_weapons[_currentWeaponNumber]);
     }
 
-    public void SetWeaponUI(Weapon weapon)
+    private void ChangeWeapon(Weapon weapon)
     {
-        CurrentWeaponName.text = weapon.Name;
-        CurrentWeaponIcon.sprite = weapon.Icon;
+        _currentWeapon = weapon;
+        WeaponChanged?.Invoke(_currentWeapon);
     }
 }

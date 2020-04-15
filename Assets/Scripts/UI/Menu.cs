@@ -4,30 +4,16 @@ using UnityEngine;
 
 public class Menu : MonoBehaviour
 {
-    public GameObject Panel;
-    public GameObject ShopPanel;
 
-    public void OpenPanel()
+    public void OpenPanel(GameObject panel)
     {
-        Panel.SetActive(true);
+        panel.SetActive(true);
         Time.timeScale = 0f;
     }
 
-    public void ClosePanel()
+    public void ClosePanel(GameObject panel)
     {
-        Panel.SetActive(false);
-        Time.timeScale = 1f;
-    }
-
-    public void OpenShopPanel()
-    {
-        ShopPanel.SetActive(true);
-        Time.timeScale = 0f;
-    }
-
-    public void CloseChopPanel()
-    {
-        ShopPanel.SetActive(false);
+        panel.SetActive(false);
         Time.timeScale = 1f;
     }
 
