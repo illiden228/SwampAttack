@@ -4271,20 +4271,20 @@ MonoBehaviour:
     Count: 5
   - Template: {fileID: 2492257446256333484, guid: 3adb50f1ea9d19e4e96e1d1921e2bd52,
       type: 3}
-    Delay: 0.5
+    Delay: 0.8
     Count: 10
-  - Template: {fileID: 2492257446256333484, guid: 3adb50f1ea9d19e4e96e1d1921e2bd52,
+  - Template: {fileID: 3556754376362345675, guid: 8e240e32463ae274ab7b515c568006ab,
       type: 3}
     Delay: 0.8
     Count: 10
-  - Template: {fileID: 2492257446256333484, guid: 3adb50f1ea9d19e4e96e1d1921e2bd52,
+  - Template: {fileID: 3556754376362345675, guid: 8e240e32463ae274ab7b515c568006ab,
       type: 3}
     Delay: 0.3
     Count: 10
   - Template: {fileID: 2492257446256333484, guid: 3adb50f1ea9d19e4e96e1d1921e2bd52,
       type: 3}
     Delay: 0.2
-    Count: 5
+    Count: 15
   - Template: {fileID: 2492257446256333484, guid: 3adb50f1ea9d19e4e96e1d1921e2bd52,
       type: 3}
     Delay: 1
